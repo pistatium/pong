@@ -41,6 +41,7 @@ class Pong:
 
     def __init__(self):
         pyxel.init(WIDTH, HEIGHT)
+        self.draw_bg()
         self.x = 0
         pyxel.run(self.update, self.draw)
 
@@ -52,9 +53,15 @@ class Pong:
             pyxel.quit()
 
     def draw(self):
-        pyxel.cls(0)
-        pyxel.rect(self.x, self.x, self.x + 20, self.x + 20, 11)
+        pyxel.clip(3, 3, WIDTH - 3, HEIGHT - 3)
+        pyxel.rect(self.x, self.x, self.x + 1, self.x + 1, 11)
         pass
+
+    def draw_bg(self):
+        pyxel.cls(0)
+        pyxel.rect(1, 1, WIDTH - 1, HEIGHT - 1, 6)
+        pyxel.rect(3, 3, WIDTH - 3, HEIGHT - 3, 0)
+        pyxel.rect(WIDTH / 2 - 1, 3, WIDTH / 2 + 1, 4, 6)
 
 if __name__ == '__main__':
     Pong()

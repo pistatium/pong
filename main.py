@@ -1,48 +1,72 @@
 from typing import Tuple
+from enum import Enum
 
 import pyxel
 
 
-WIDTH = 180
-HEIGHT = 120
+BOARD_WIDTH = 192
+BOARD_HEIGHT = 128
+PADDING = 3
+WIDTH = 192 + PADDING * 2
+HEIGHT = 128 + PADDING + 12
 BALL_SIZE = 4
-FRICTION = 0.95
 
 
-class Obj:
+class Color(Enum):
+    BLACK = 0
+    GRAY = 6
+    GREEN = 11
+
+
+class Ball:
     size: int
-    friction: float
     x: int
     y: int
     vx: float
     vy: float
 
-    def __init__(self, size: int, friction: float, x: int, y: int):
+    def __init__(self, size: int, x: int, y: int, vx: float, vy: float):
         self.size = size
-        self.friction = friction
         self.x = x
         self.y = y
-        self.vx = 0.0
-        self.vy = 0.0
+        self.vx = vx
+        self.vy = vy
 
-    def add_force(ax: float, ay: float):
-        self.vx += ax
-        self.vy += ay
-
-    def updated() -> :
+    def updated():
         self.x += self.vx
         self.y += self.vy
         self.vx *= self.friction
         self.vy *= self.friction
 
 
-class Pong:
+class Board:
+    width: int
+    height: int
+    offset_x: int
+    offset_y: int
+    ball: Ball
+
+    def __init__(self, width: int, height: int, offset_x: int, offset_y: int):
+        self.width = width
+        self.height = height
+        self.offset_x = offset_x
+        self.offset_y = offset_y
+        self.ball = Ball(BALL_SIZE, width / 2, height / 2, 1, 0)
+
+    def absolute(x, y) -> Tuple[int, int]:
+        return x + offset_x, y + offset_y
+
+    def draw(self):
+        pyxel.rect(self.offset_x, self.offset_y, self.width + self.offset_x, self.height + self.offset_y, Color.GRAY.value)
+
+
+class App:
     x: int = 0
+    board: Board
 
     def __init__(self):
         pyxel.init(WIDTH, HEIGHT)
-        self.draw_bg()
-        self.x = 0
+        self.board = Board(BOARD_WIDTH, BOARD_HEIGHT, PADDING, PADDING)
         pyxel.run(self.update, self.draw)
 
     def update(self):
@@ -53,15 +77,10 @@ class Pong:
             pyxel.quit()
 
     def draw(self):
-        pyxel.clip(3, 3, WIDTH - 3, HEIGHT - 3)
-        pyxel.rect(self.x, self.x, self.x + 1, self.x + 1, 11)
-        pass
+        pyxel.cls(Color.BLACK.value)
+        self.board.draw()
+        pyxel.rect(self.x, self.x, self.x + 1, self.x + 1, Color.GREEN.value)
 
-    def draw_bg(self):
-        pyxel.cls(0)
-        pyxel.rect(1, 1, WIDTH - 1, HEIGHT - 1, 6)
-        pyxel.rect(3, 3, WIDTH - 3, HEIGHT - 3, 0)
-        pyxel.rect(WIDTH / 2 - 1, 3, WIDTH / 2 + 1, 4, 6)
 
 if __name__ == '__main__':
     Pong()

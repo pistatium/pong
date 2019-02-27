@@ -13,7 +13,7 @@ HEIGHT = 128 + PADDING + 12
 
 BALL_SIZE = 4
 ATK_SIZE = 16
-DEF_SIZE = 24
+DEF_SIZE = 48
 ATK_DELTA_LIMIT = 2
 DEF_DELTA_LIMIT = 1
 BAR_WIDTH = 2
@@ -86,10 +86,10 @@ class TeamManager:
         self.game_info = gi
         self.score = 0
         if reversed:
-            self.atk_pos = Pos(gi.width // 12, gi.height // 2)
-            self.def_pos = Pos(gi.width // 12 * 3, gi.height // 2)
+            self.atk_pos = Pos(gi.width // 12 * 5, gi.height // 2)
+            self.def_pos = Pos(gi.width // 12 * 1, gi.height // 2)
         else:
-            self.atk_pos = Pos(gi.width // 12 * 9, gi.height // 2)
+            self.atk_pos = Pos(gi.width // 12 * 7, gi.height // 2)
             self.def_pos = Pos(gi.width // 12 * 11, gi.height // 2)
 
     def update(self, state: State):
@@ -104,15 +104,19 @@ class TeamManager:
         self.score += 1
 
     def _move_y(self, y_delta: float, pos: Pos, size: int) -> int:
-        if y_delta + pos.y - 2 // size < 0:
-            return 0 + 2 // size
-        if y_delta + pos.y + 2 // size > self.game_info.height:
-            return self.game_info.height + 2 // size
+        if y_delta + pos.y - size // 2 < 0:
+            return 0 + size // 2
+        if y_delta + pos.y + size // 2 > self.game_info.height:
+            return self.game_info.height - size // 2
         return int(y_delta + pos.y)
 
     @property
     def state(self) -> TeamState:
         return TeamState(atk_pos=self.atk_pos, def_pos=self.def_pos, score=self.score)
+
+    @property
+    def score_label(self) -> str:
+        return f'{self.team.name}: {self.score}'
 
 
 class Ball:
@@ -179,6 +183,17 @@ class Board:
             self.ball.pos = Pos(self.game_info.width // 2, self.game_info.height // 2)
             self.ball.vx = -1
             self.ball.vy = random.random() * 5
+        for player in (self.p1, self.p2):
+            if player.atk_pos.x - BAR_WIDTH // 2 <= ball_pos.x <= player.atk_pos.x + BAR_WIDTH // 2:
+                if player.atk_pos.y - ATK_SIZE // 2 <= ball_pos.y <= player.atk_pos.y + ATK_SIZE // 2:
+                    self.ball.vx = self.ball.vx * -1
+                    diff = ball_pos.y - player.atk_pos.y
+                    self.ball.vy += diff
+            if player.def_pos.x - BAR_WIDTH // 2 <= ball_pos.x <= player.def_pos.x + BAR_WIDTH // 2:
+                if player.def_pos.y - DEF_SIZE // 2 <= ball_pos.y <= player.def_pos.y + DEF_SIZE // 2:
+                    self.ball.vx = self.ball.vx * -1
+                    diff = ball_pos.y - player.def_pos.y
+                    self.ball.vy += diff // 5
 
     def draw(self):
         pyxel.rect(
@@ -212,6 +227,9 @@ class Board:
                 x + BAR_WIDTH // 2,
                 y + DEF_SIZE // 2,
                 Color.YELLO.value)
+        x, y = self.absolute(Pos(0, self.game_info.height))
+        scores = f'{self.p1.score_label} {self.p2.score_label}'
+        pyxel.text(x + PADDING, y + PADDING, scores, Color.GRAY.value)
 
 
 class Pong:

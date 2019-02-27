@@ -4,7 +4,7 @@ import random
 import pyxel
 
 from pongpy.definitions import BALL_SIZE, BAR_WIDTH, ATK_SIZE, DEF_SIZE, PADDING, HEIGHT, WIDTH, BOARD_WIDTH, \
-    BOARD_HEIGHT, MATCH_POINT
+    BOARD_HEIGHT, WIN_POINT, MATCH_POINT
 from pongpy.interfaces.team import Team
 from pongpy.models.color import Color
 from pongpy.models.game_info import GameInfo
@@ -22,7 +22,7 @@ class TeamManager:
         self.team = team
         self.game_info = gi
         self.score = 0
-        if reversed:
+        if not reversed:
             self.atk_pos = Pos(gi.width // 12 * 5, gi.height // 2)
             self.def_pos = Pos(gi.width // 12 * 1, gi.height // 2)
         else:
@@ -30,10 +30,10 @@ class TeamManager:
             self.def_pos = Pos(gi.width // 12 * 11, gi.height // 2)
 
     def update(self, state: State):
-        atk_action = self.team.atk_update(info=self.game_info, state=state)
+        atk_action = self.team.atk_action(info=self.game_info, state=state)
         assert -self.game_info.atk_return_limit <= atk_action <= self.game_info.atk_return_limit, 'atk の返り値が大きすぎます'
         self.atk_pos = Pos(self.atk_pos.x, self._move_y(atk_action, self.atk_pos, ATK_SIZE))
-        def_action = self.team.def_pudate(info=self.game_info, state=state)
+        def_action = self.team.def_action(info=self.game_info, state=state)
         assert -self.game_info.def_return_limit <= def_action <= self.game_info.def_return_limit, 'def の返り値が大きすぎます'
         self.def_pos = Pos(self.def_pos.x, self._move_y(def_action, self.def_pos, DEF_SIZE))
 
@@ -189,6 +189,7 @@ class Pong:
         if pyxel.btnp(pyxel.KEY_Q):
             pyxel.quit()
         self.board.update()
+        # 1ゲーム終了条件
         if self.board.p1.score >= WIN_POINT or self.board.p2.score >= WIN_POINT:
             print(f'{self.board.p1.score_label} {self.board.p2.score_label}')
             self.games.append(self.board.p1.score > self.board.p2.score)
@@ -211,8 +212,7 @@ class Pong:
 
 
 if __name__ == '__main__':
-    team1 = Team()
-    team1.name = 'team1'
-    team2 = Team()
-    team2.name = 'team2'
-    Pong(team1, team2)
+    from pongpy.teams.stub_team import StubTeam
+    from pongpy.teams.random_team import RandomTeam
+    from pongpy.teams.follow_team import FollowTeam
+    Pong(FollowTeam(), RandomTeam())

@@ -6,13 +6,14 @@ from pongpy.models.state import State
 
 class Team(metaclass=abc.ABCMeta):
 
+    @property
     @abc.abstractmethod
     def name(self) -> str:
         """
         Team名をセットする
         :return name: 半角英数字、8字以内
          """
-        return self.__class__.name()
+        return self.__class__.__name__
 
     @abc.abstractmethod
     def atk_action(self, info: GameInfo, state: State) -> int:

@@ -1,78 +1,15 @@
-from typing import Tuple, NamedTuple
-from enum import Enum
+from typing import Tuple
 import random
 
 import pyxel
 
-
-BOARD_WIDTH = 192
-BOARD_HEIGHT = 128
-PADDING = 3
-WIDTH = 192 + PADDING * 2
-HEIGHT = 128 + PADDING + 12
-
-BALL_SIZE = 4
-ATK_SIZE = 16
-DEF_SIZE = 48
-ATK_DELTA_LIMIT = 2
-DEF_DELTA_LIMIT = 1
-BAR_WIDTH = 2
-
-
-class Color(Enum):
-    BLACK = 0
-    GRAY = 7
-    YELLO = 9
-    GREEN = 11
-    BLUE = 12
-
-
-class Pos(NamedTuple):
-    """ ボード内の相対座標 """
-    x: int
-    y: int
-
-
-class GameInfo(NamedTuple):
-    width: int
-    height: int
-    ball_size = BALL_SIZE
-    atk_size = ATK_SIZE
-    atk_return_limit = ATK_DELTA_LIMIT
-    def_size = DEF_SIZE
-    def_return_limit = DEF_DELTA_LIMIT
-    bar_width = BAR_WIDTH
-
-
-class TeamState(NamedTuple):
-    atk_pos: Pos
-    def_pos: Pos
-    score: int
-
-
-class State(NamedTuple):
-    reversed: bool
-    mine_team: TeamState
-    enemy_team: TeamState
-    ball_pos: Pos
-
-
-class Team:
-    """ これを継承してロジックを作る """
-    name: str = 'team'
-
-    atk_reversed = 1
-    def_reversed = 1
-
-    def atk_update(self, info: GameInfo, state: State) -> int:
-        if random.random() > 0.9:
-            self.atk_reversed *= -1
-        return 2 * self.atk_reversed
-
-    def def_pudate(self, info: GameInfo, state: State) -> int:
-        if random.random() > 0.95:
-            self.def_reversed *= -1
-        return 1 * self.def_reversed
+from pongpy.definitions import BALL_SIZE, BAR_WIDTH, ATK_SIZE, DEF_SIZE, PADDING, HEIGHT, WIDTH, BOARD_WIDTH, \
+    BOARD_HEIGHT, MATCH_POINT
+from pongpy.interfaces.team import Team
+from pongpy.models.color import Color
+from pongpy.models.game_info import GameInfo
+from pongpy.models.pos import Pos
+from pongpy.models.state import State, TeamState
 
 
 class TeamManager:
@@ -132,7 +69,7 @@ class Ball:
         self.vy = vy
 
     def updated(self):
-        return Pos(self.pos.x + self.vx, self.pos.y + self.vy)
+        return Pos(int(self.pos.x + self.vx), int(self.pos.y + self.vy))
 
     def __str__(self):
         return f'px: {self.pos.x} py: {self.pos.y} vx: {self.vx} vy: {self.vy}'
@@ -146,10 +83,10 @@ class Board:
     offset_y: int
     ball: Ball
 
-    def __init__(self, width: int, height: int, offset_x: int, offset_y: int):
+    def __init__(self, width: int, height: int, offset_x: int, offset_y: int, team1: Team, team2: Team):
         self.game_info = GameInfo(width=width, height=height)
-        self.p1 = TeamManager(self.game_info, Team(), reversed=False)
-        self.p2 = TeamManager(self.game_info, Team(), reversed=True)
+        self.p1 = TeamManager(self.game_info, team1, reversed=False)
+        self.p2 = TeamManager(self.game_info, team2, reversed=True)
         self.offset_x = offset_x
         self.offset_y = offset_y
         self.ball = Ball(BALL_SIZE, Pos(width // 2, height // 2), 1, random.random() * 5)
@@ -233,22 +170,49 @@ class Board:
 
 
 class Pong:
-    board: Board
 
-    def __init__(self):
+    board: Board
+    team1: Team
+    team2: Team
+    turn: bool
+    games = []
+
+    def __init__(self, team1: Team, team2: Team):
         pyxel.init(WIDTH, HEIGHT)
-        self.board = Board(BOARD_WIDTH, BOARD_HEIGHT, PADDING, PADDING)
+        self.team1 = team1
+        self.team2 = team2
+        self.turn = True
+        self.board = Board(BOARD_WIDTH, BOARD_HEIGHT, PADDING, PADDING, team1=self.team1, team2=self.team2)
         pyxel.run(self.update, self.draw)
 
     def update(self):
         if pyxel.btnp(pyxel.KEY_Q):
             pyxel.quit()
         self.board.update()
+        if self.board.p1.score >= WIN_POINT or self.board.p2.score >= WIN_POINT:
+            print(f'{self.board.p1.score_label} {self.board.p2.score_label}')
+            self.games.append(self.board.p1.score > self.board.p2.score)
+            if len([x for x in self.games if x]) >= MATCH_POINT:
+                print(f'WINNER: {self.team1.name}')
+                pyxel.quit()
+            if len([x for x in self.games if not x]) >= MATCH_POINT:
+                print(f'WINNER: {self.team2.name}')
+                pyxel.quit()
+            self.turn = not self.turn
+            if not self.turn:
+                self.board = Board(BOARD_WIDTH, BOARD_HEIGHT, PADDING, PADDING, team1=self.team2, team2=self.team1)
+            else:
+                self.board = Board(BOARD_WIDTH, BOARD_HEIGHT, PADDING, PADDING, team1=self.team1, team2=self.team2)
 
     def draw(self):
         pyxel.cls(Color.BLACK.value)
         self.board.draw()
+        pyxel.text(PADDING * 2, HEIGHT - PADDING * 2, ''.join('o' if x else 'x' for x in self.games), Color.GRAY.value)
 
 
 if __name__ == '__main__':
-    Pong()
+    team1 = Team()
+    team1.name = 'team1'
+    team2 = Team()
+    team2.name = 'team2'
+    Pong(team1, team2)

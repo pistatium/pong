@@ -51,9 +51,3 @@ class Pong:
         pyxel.cls(Color.BLACK.value)
         self.board.draw()
         pyxel.text(PADDING * 2, HEIGHT - PADDING * 2, ''.join('o' if x else 'x' for x in self.games), Color.GRAY.value)
-
-
-if __name__ == '__main__':
-    from pongpy.teams.random_team import RandomTeam
-    from pongpy.teams.follow_team import FollowTeam
-    Pong(FollowTeam(), RandomTeam())

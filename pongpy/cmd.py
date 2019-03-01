@@ -1,17 +1,28 @@
+import importlib
+
 import click
 
 from pongpy.pong import Pong
 
 
 @click.command()
-def cmd():
-    from pongpy.teams.random_team import RandomTeam
-    from pongpy.teams.follow_team import FollowTeam
-    Pong(FollowTeam(), RandomTeam())
+@click.argument('team1', default='pongpy.teams.random_team:RandomTeam')
+@click.argument('team2', default='pongpy.teams.follow_team:FollowTeam')
+def cmd(team1, team2):
+    t1 = dynamic_import(team1)
+    t2 = dynamic_import(team2)
+    Pong(t1(), t2())
 
 
 def main():
     cmd()
+
+
+def dynamic_import(name):
+    module_name, class_name = name.split(':')
+    module = importlib.import_module(module_name)
+    klass = getattr(module, class_name)
+    return klass
 
 
 if __name__ == '__main__':

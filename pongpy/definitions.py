@@ -11,5 +11,5 @@ DEF_SIZE = 32  # DEF bar の長さ
 ATK_DELTA_LIMIT = 2  # ATK の移動制限
 DEF_DELTA_LIMIT = 1  # DEF の移動制限
 BAR_WIDTH = 2  # bar の横幅
-WIN_POINT = 3  # 1ゲームの勝利点
+SET_POINT = 3  # 1ゲームの勝利点
 MATCH_POINT = 2  # 何ゲーム先取で勝利か

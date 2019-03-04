@@ -21,10 +21,10 @@ class Board:
     offset_y: int
     ball: Ball
 
-    def __init__(self, width: int, height: int, offset_x: int, offset_y: int, team1: Team, team2: Team):
+    def __init__(self, width: int, height: int, offset_x: int, offset_y: int, left_team: Team, right_team: Team):
         self.game_info = GameInfo(width=width, height=height)
-        self.p1 = TeamManager(self.game_info, team1, reversed=False)
-        self.p2 = TeamManager(self.game_info, team2, reversed=True)
+        self.p1 = TeamManager(self.game_info, left_team, reversed=False)
+        self.p2 = TeamManager(self.game_info, right_team, reversed=True)
         self.offset_x = offset_x
         self.offset_y = offset_y
         self.ball = Ball(BALL_SIZE, Pos(width // 2, height // 2), 1, random.random() * 5)
@@ -40,10 +40,10 @@ class Board:
 
         ball_pos = self.ball.updated()
         self.ball.pos = ball_pos
-        if ball_pos.y < 0:
+        if ball_pos.y <= 0:
             self.ball.pos = Pos(ball_pos.x, -ball_pos.y)
             self.ball.vy *= -1
-        if ball_pos.y > self.game_info.height:
+        if ball_pos.y >= self.game_info.height:
             self.ball.pos = Pos(ball_pos.x, self.game_info.height - (ball_pos.y - self.game_info.height))
             self.ball.vy *= -1
         if ball_pos.x < 0:

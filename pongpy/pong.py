@@ -22,16 +22,26 @@ class PongMatch:
         self.team2 = team2
         self.team1_set_count = 0
         self.team2_set_count = 0
-        self.turn = True
+        self.turn = 1
 
     def start(self):
-        while (self.team1_set_count + self.team2_set_count < MATCH_POINT):
-            result = {}
-            if self.turn:
+        while self.team1_set_count < MATCH_POINT and self.team2_set_count < MATCH_POINT:
+            result = {}  # 結果受け渡し用参照オブジェクト
+            if self.turn > 0:
                 Pong(self.team1, self.team2, result=result)
+                if result['win_left']:
+                    self.team1_set_count += 1
+                else:
+                    self.team2_set_count += 1
             else:
-                Pong(self.team1, self.team2, result=result)
-            print(result)
+                Pong(self.team2, self.team1, result=result)
+                if result['win_left']:
+                    self.team2_set_count += 1
+                else:
+                    self.team1_set_count += 1
+            self.turn *= -1
+        win_team = self.team1 if self.team1_set_count > self.team2_set_count else self.team2
+        print(f'Winner: {win_team.name}')
 
 
 class Pong:
@@ -46,19 +56,15 @@ class Pong:
         pyxel.init(WIDTH, HEIGHT)
         self.left_team = left_team
         self.right_team = right_team
-        self.board = Board(BOARD_WIDTH, BOARD_HEIGHT, PADDING, PADDING, team1=self.left_team, team2=self.right_team)
+        self.board = Board(BOARD_WIDTH, BOARD_HEIGHT, PADDING, PADDING, left_team=self.left_team, right_team=self.right_team)
         self.result = result
         pyxel.run(self.update, self.draw)
 
     def update(self):
-        if pyxel.btnp(pyxel.KEY_Q):
-            pyxel.quit()
-
         self.board.update()
 
         # 1ゲーム終了条件
         if self.board.p1.score >= SET_POINT or self.board.p2.score >= SET_POINT:
-
             print(f'{self.board.p1.score_label} {self.board.p2.score_label}')
             self.result.update({
                 'win_left': self.board.p1.score > self.board.p2.score,
@@ -66,18 +72,6 @@ class Pong:
                 'p2': self.board.p2.score
             })
             pyxel.quit()
-            # self.games.append(self.board.p1.score > self.board.p2.score)
-            # if len([x for x in self.games if x]) >= MATCH_POINT:
-            #     print(f'WINNER: {self.left_team.name}')
-            #     pyxel.quit()
-            # if len([x for x in self.games if not x]) >= MATCH_POINT:
-            #     print(f'WINNER: {self.right_team.name}')
-            #     pyxel.quit()
-            # self.turn = not self.turn
-            # if not self.turn:
-            #     self.board = Board(BOARD_WIDTH, BOARD_HEIGHT, PADDING, PADDING, team1=self.right_team, team2=self.left_team)
-            # else:
-            #     self.board = Board(BOARD_WIDTH, BOARD_HEIGHT, PADDING, PADDING, team1=self.left_team, team2=self.right_team)
 
     def draw(self):
         pyxel.cls(Color.BLACK.value)

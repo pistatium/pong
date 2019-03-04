@@ -9,7 +9,7 @@ class StubTeam(Team):
         return 'stub team'
 
     def atk_action(self, info: GameInfo, state: State) -> int:
-        return 2
+        return 0
 
     def def_action(self, info: GameInfo, state: State) -> int:
-        return 1
+        return 0

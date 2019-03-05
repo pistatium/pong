@@ -33,8 +33,8 @@ class Board:
         return pos.x + self.offset_x, pos.y + self.offset_y
 
     def update(self):
-        p1_state = State(reversed=False, mine_team=self.p1.state, enemy_team=self.p2.state, ball_pos=self.ball.pos)
-        p2_state = State(reversed=True, mine_team=self.p2.state, enemy_team=self.p1.state, ball_pos=self.ball.pos)
+        p1_state = State(is_right_side=False, mine_team=self.p1.state, enemy_team=self.p2.state, ball_pos=self.ball.pos)
+        p2_state = State(is_right_side=True, mine_team=self.p2.state, enemy_team=self.p1.state, ball_pos=self.ball.pos)
         self.p1.update(p1_state)
         self.p2.update(p2_state)
 
@@ -62,7 +62,7 @@ class Board:
             if player.atk_pos.x - BAR_WIDTH // 2 <= ball_pos.x <= player.atk_pos.x + BAR_WIDTH // 2:
                 if player.atk_pos.y - ATK_SIZE // 2 <= ball_pos.y <= player.atk_pos.y + ATK_SIZE // 2:
                     self.ball.vx = self.ball.vx * -1
-                    diff = ball_pos.y - player.atk_pos.y
+                    diff = ball_pos.y - player.atk_pos.y + (random.random() / 2 + 1)
                     self.ball.vy += diff
             if player.def_pos.x - BAR_WIDTH // 2 <= ball_pos.x <= player.def_pos.x + BAR_WIDTH // 2:
                 if player.def_pos.y - DEF_SIZE // 2 <= ball_pos.y <= player.def_pos.y + DEF_SIZE // 2:

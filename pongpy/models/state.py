@@ -6,11 +6,11 @@ from .pos import Pos
 class TeamState(NamedTuple):
     atk_pos: Pos
     def_pos: Pos
-    score: int
+    score: int  # 1セット内での得点数
 
 
 class State(NamedTuple):
-    reversed: bool
-    mine_team: TeamState
-    enemy_team: TeamState
-    ball_pos: Pos
+    is_right_side: bool  # 右側かどうか
+    mine_team: TeamState  # 自チーム
+    enemy_team: TeamState  # 相手チーム
+    ball_pos: Pos  # ボール

@@ -4,6 +4,9 @@ from pongpy.models.game_info import GameInfo
 from pongpy.models.pos import Pos
 from pongpy.models.state import State, TeamState
 
+DMZ_SIZE = 10
+SADDEN_DEATH_DURATION = 1000
+
 
 class TeamManager:
     game_info: GameInfo
@@ -23,12 +26,20 @@ class TeamManager:
             self.def_pos = Pos(gi.width // 12 * 11, gi.height // 2)
 
     def update(self, state: State):
+        # ゲームが長引いたらだんだん近づける
+        direction = -1 if state.is_right_side else 1
+        time_pos = direction if state.time % SADDEN_DEATH_DURATION == 1 else 0
+        # これ以上は近づけない
+        if self.game_info.width // 2 - DMZ_SIZE < self.atk_pos.x < self.game_info.width // 2 + DMZ_SIZE:
+            time_pos = 0
+
         atk_action = self.team.atk_action(info=self.game_info, state=state)
         assert -self.game_info.atk_return_limit <= atk_action <= self.game_info.atk_return_limit, 'atk の返り値が大きすぎます'
-        self.atk_pos = Pos(self.atk_pos.x, self._move_y(atk_action, self.atk_pos, ATK_SIZE))
+        self.atk_pos = Pos(self.atk_pos.x + time_pos, self._move_y(atk_action, self.atk_pos, ATK_SIZE))
         def_action = self.team.def_action(info=self.game_info, state=state)
+
         assert -self.game_info.def_return_limit <= def_action <= self.game_info.def_return_limit, 'def の返り値が大きすぎます'
-        self.def_pos = Pos(self.def_pos.x, self._move_y(def_action, self.def_pos, DEF_SIZE))
+        self.def_pos = Pos(self.def_pos.x + time_pos * 5, self._move_y(def_action, self.def_pos, DEF_SIZE))
 
     def add_score(self):
         self.score += 1

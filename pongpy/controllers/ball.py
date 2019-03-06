@@ -14,7 +14,7 @@ class Ball:
         self.vy = vy
 
     def updated(self):
-        return Pos(int(self.pos.x + self.vx), int(self.pos.y + self.vy))
+        return Pos(self.pos.x + self.vx, self.pos.y + self.vy)
 
     def __str__(self):
         return f'px: {self.pos.x} py: {self.pos.y} vx: {self.vx} vy: {self.vy}'

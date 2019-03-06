@@ -10,7 +10,7 @@ from pongpy.models.color import Color
 from pongpy.models.game_info import GameInfo
 from pongpy.models.pos import Pos
 from pongpy.models.state import State
-from pongpy.definitions import BALL_SIZE, BAR_WIDTH, ATK_SIZE, DEF_SIZE, PADDING
+from pongpy.definitions import BALL_SIZE, BAR_WIDTH, ATK_SIZE, DEF_SIZE, PADDING, MAX_VY
 
 
 class Board:
@@ -33,19 +33,16 @@ class Board:
         return pos.x + self.offset_x, pos.y + self.offset_y
 
     def update(self):
-        p1_state = State(is_right_side=False, mine_team=self.p1.state, enemy_team=self.p2.state, ball_pos=self.ball.pos)
-        p2_state = State(is_right_side=True, mine_team=self.p2.state, enemy_team=self.p1.state, ball_pos=self.ball.pos)
+        time = pyxel.frame_count
+        p1_state = State(is_right_side=False, mine_team=self.p1.state, enemy_team=self.p2.state, ball_pos=self.ball.pos, time=time)
+        p2_state = State(is_right_side=True, mine_team=self.p2.state, enemy_team=self.p1.state, ball_pos=self.ball.pos, time=time)
         self.p1.update(p1_state)
         self.p2.update(p2_state)
 
         ball_pos = self.ball.updated()
         self.ball.pos = ball_pos
         if ball_pos.y <= 0:
-            adjust = 0
-            # FIXME: 張り付き対策
-            if -ball_pos.y == 0:
-                adjust = 1
-            self.ball.pos = Pos(ball_pos.x, -ball_pos.y + adjust)
+            self.ball.pos = Pos(ball_pos.x, -ball_pos.y)
             self.ball.vy *= -1
         if ball_pos.y >= self.game_info.height:
             self.ball.pos = Pos(ball_pos.x, self.game_info.height - (ball_pos.y - self.game_info.height))
@@ -66,13 +63,19 @@ class Board:
             if player.atk_pos.x - BAR_WIDTH // 2 <= ball_pos.x <= player.atk_pos.x + BAR_WIDTH // 2:
                 if player.atk_pos.y - ATK_SIZE // 2 <= ball_pos.y <= player.atk_pos.y + ATK_SIZE // 2:
                     self.ball.vx = self.ball.vx * -1
-                    diff = ball_pos.y - player.atk_pos.y + (random.random() / 5 + 1)
+                    diff = ball_pos.y - player.atk_pos.y + (random.random() - 0.5) * 2
                     self.ball.vy += diff
             if player.def_pos.x - BAR_WIDTH // 2 <= ball_pos.x <= player.def_pos.x + BAR_WIDTH // 2:
                 if player.def_pos.y - DEF_SIZE // 2 <= ball_pos.y <= player.def_pos.y + DEF_SIZE // 2:
                     self.ball.vx = self.ball.vx * -1
                     diff = ball_pos.y - player.def_pos.y
                     self.ball.vy += diff // 6
+
+        # 最高速度規制
+        if self.ball.vy > MAX_VY:
+            self.ball.vy = MAX_VY
+        if self.ball.vy < -MAX_VY:
+            self.ball.vy = -MAX_VY
 
     def draw(self):
         pyxel.rect(

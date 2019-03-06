@@ -14,3 +14,4 @@ class State(NamedTuple):
     mine_team: TeamState  # 自チーム
     enemy_team: TeamState  # 相手チーム
     ball_pos: Pos  # ボール
+    time: int  # 経過フレーム数

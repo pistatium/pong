@@ -53,7 +53,7 @@ class Pong:
     games = []
 
     def __init__(self, left_team: Team, right_team: Team, result: dict):
-        pyxel.init(WIDTH, HEIGHT)
+        pyxel.init(WIDTH, HEIGHT, fps=100)
         self.left_team = left_team
         self.right_team = right_team
         self.board = Board(BOARD_WIDTH, BOARD_HEIGHT, PADDING, PADDING, left_team=self.left_team, right_team=self.right_team)
@@ -61,6 +61,7 @@ class Pong:
         pyxel.run(self.update, self.draw)
 
     def update(self):
+
         self.board.update()
 
         # 1ゲーム終了条件

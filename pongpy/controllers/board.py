@@ -41,7 +41,11 @@ class Board:
         ball_pos = self.ball.updated()
         self.ball.pos = ball_pos
         if ball_pos.y <= 0:
-            self.ball.pos = Pos(ball_pos.x, -ball_pos.y)
+            adjust = 0
+            # FIXME: 張り付き対策
+            if -ball_pos.y == 0:
+                adjust = 1
+            self.ball.pos = Pos(ball_pos.x, -ball_pos.y + adjust)
             self.ball.vy *= -1
         if ball_pos.y >= self.game_info.height:
             self.ball.pos = Pos(ball_pos.x, self.game_info.height - (ball_pos.y - self.game_info.height))
@@ -51,24 +55,24 @@ class Board:
             self.p2.add_score()
             self.ball.pos = Pos(self.game_info.width // 2, self.game_info.height // 2)
             self.ball.vx = 1
-            self.ball.vy = random.random() * 5
+            self.ball.vy = random.random() * 2
         if ball_pos.x > self.game_info.width:
             # p1 ゴール
             self.p1.add_score()
             self.ball.pos = Pos(self.game_info.width // 2, self.game_info.height // 2)
             self.ball.vx = -1
-            self.ball.vy = random.random() * 5
+            self.ball.vy = random.random() * 2
         for player in (self.p1, self.p2):
             if player.atk_pos.x - BAR_WIDTH // 2 <= ball_pos.x <= player.atk_pos.x + BAR_WIDTH // 2:
                 if player.atk_pos.y - ATK_SIZE // 2 <= ball_pos.y <= player.atk_pos.y + ATK_SIZE // 2:
                     self.ball.vx = self.ball.vx * -1
-                    diff = ball_pos.y - player.atk_pos.y + (random.random() / 2 + 1)
+                    diff = ball_pos.y - player.atk_pos.y + (random.random() / 5 + 1)
                     self.ball.vy += diff
             if player.def_pos.x - BAR_WIDTH // 2 <= ball_pos.x <= player.def_pos.x + BAR_WIDTH // 2:
                 if player.def_pos.y - DEF_SIZE // 2 <= ball_pos.y <= player.def_pos.y + DEF_SIZE // 2:
                     self.ball.vx = self.ball.vx * -1
                     diff = ball_pos.y - player.def_pos.y
-                    self.ball.vy += diff // 5
+                    self.ball.vy += diff // 6
 
     def draw(self):
         pyxel.rect(

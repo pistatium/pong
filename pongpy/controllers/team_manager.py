@@ -1,3 +1,5 @@
+import re
+
 from pongpy.definitions import ATK_SIZE, DEF_SIZE
 from pongpy.interfaces.team import Team
 from pongpy.models.game_info import GameInfo
@@ -6,6 +8,8 @@ from pongpy.models.state import State, TeamState
 
 DMZ_SIZE = 10
 SADDEN_DEATH_DURATION = 1000
+MAX_NAME_LENGTH = 16
+NAME_PATTERN = re.compile(r'^[\w ]+$', re.A)
 
 
 class TeamManager:
@@ -15,6 +19,7 @@ class TeamManager:
     score: int
 
     def __init__(self, gi: GameInfo, team: Team, reversed: bool):
+        validate_name(team.name)
         self.team = team
         self.game_info = gi
         self.score = 0
@@ -34,11 +39,13 @@ class TeamManager:
             time_pos = 0
 
         atk_action = self.team.atk_action(info=self.game_info, state=state)
-        assert -self.game_info.atk_return_limit <= atk_action <= self.game_info.atk_return_limit, 'atk の返り値が大きすぎます'
+        assert isinstance(atk_action, (int, float)), 'atk_action の返り値が数値ではありません'
+        assert -self.game_info.atk_return_limit <= atk_action <= self.game_info.atk_return_limit, 'atk_action の返り値が大きすぎます'
         self.atk_pos = Pos(self.atk_pos.x + time_pos, self._move_y(atk_action, self.atk_pos, ATK_SIZE))
         def_action = self.team.def_action(info=self.game_info, state=state)
 
-        assert -self.game_info.def_return_limit <= def_action <= self.game_info.def_return_limit, 'def の返り値が大きすぎます'
+        assert isinstance(atk_action, (int, float)), 'def_action の返り値が数値ではありません'
+        assert -self.game_info.def_return_limit <= def_action <= self.game_info.def_return_limit, 'def_action の返り値が大きすぎます'
         self.def_pos = Pos(self.def_pos.x + time_pos * 5, self._move_y(def_action, self.def_pos, DEF_SIZE))
 
     def add_score(self):
@@ -58,3 +65,12 @@ class TeamManager:
     @property
     def score_label(self) -> str:
         return f'{self.team.name}: {self.score}'
+
+
+def validate_name(name: str):
+    assert NAME_PATTERN.match(name), 'チーム名に ascii 以外の文字列が含まれてます'
+    assert 0 < len(name) <= MAX_NAME_LENGTH, 'チーム名の長さが不正です'
+
+
+def _isascii(s: str):
+    return len(s) == len(s.encode())

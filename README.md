@@ -73,7 +73,7 @@ class MyTeam(Team):
 
 ```
 
-のようなスクリプトを myteam.py という名前で作ります。
+のようなスクリプトを myteam.py という名前で作ります。(好きに変えても大丈夫です)
 
 ```sh
 $ pongpy myteam:MyTeam
@@ -92,8 +92,7 @@ $ pongpy myteam:MyTeam myteam:MyTeam
 
 __name__
 
-チーム名を返すプロパティです。
-**ASCII文字列で10字以内が望ましいです。**
+チーム名を返すプロパティです。長すぎない ASCII文字列 を返してください。**
 
 __atk_action__
 

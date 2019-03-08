@@ -92,7 +92,7 @@ $ pongpy myteam:MyTeam myteam:MyTeam
 
 __name__
 
-チーム名を返すプロパティです。長すぎない ASCII文字列 を返してください。**
+チーム名を返すプロパティです。長すぎない ASCII文字列 を返してください。
 
 __atk_action__
 

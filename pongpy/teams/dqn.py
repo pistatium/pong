@@ -5,16 +5,17 @@ from pongpy.models.game_info import GameInfo
 from pongpy.models.state import State
 
 
-class ManualTeam(Team):
-    """
-    デバッグ用の手動操作チーム。
-    Pyxel を直接読んでいるのでデバッグ用と以外では利用しない。
-    """
+class DqnTeam(Team):
+    """ デバッグ用、手動操作チーム """
     @property
     def name(self) -> str:
-        return 'Manual'
+        return 'dqn'
 
     def atk_action(self, info: GameInfo, state: State) -> int:
+        if pyxel._app._capture_images[0]:
+            print(pyxel._app._get_capture_image(0))
+            print(state.mine_team.score)
+            print(state.enemy_team.score)
         if pyxel.btn(pyxel.KEY_I):
             return -info.atk_return_limit
         if pyxel.btn(pyxel.KEY_K):

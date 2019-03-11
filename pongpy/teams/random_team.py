@@ -5,7 +5,9 @@ from pongpy.models.state import State
 
 
 class RandomTeam(Team):
-
+    """
+    ランダムに折り返して動くサンプル。
+    """
     atk_direction = -1
     def_direction = -1
 

@@ -4,6 +4,9 @@ from pongpy.models.state import State
 
 
 class FollowTeam(Team):
+    """
+    現在のボールの位置似合わせて動くサンプル。
+    """
     @property
     def name(self) -> str:
         return 'follow team'

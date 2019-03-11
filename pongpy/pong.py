@@ -3,7 +3,7 @@ from logging import getLogger
 import pyxel
 
 from pongpy.controllers.board import Board
-from pongpy.definitions import PADDING, HEIGHT, WIDTH, BOARD_WIDTH, BOARD_HEIGHT, SET_POINT, MATCH_POINT
+from pongpy.definitions import PADDING, HEIGHT, WIDTH, BOARD_WIDTH, BOARD_HEIGHT, SET_POINT, MATCH_POINT, FRAME_RATE
 from pongpy.interfaces.team import Team
 from pongpy.models.color import Color
 
@@ -53,7 +53,7 @@ class Pong:
     games = []
 
     def __init__(self, left_team: Team, right_team: Team, result: dict):
-        pyxel.init(WIDTH, HEIGHT, fps=100)
+        pyxel.init(WIDTH, HEIGHT, fps=FRAME_RATE)
         self.left_team = left_team
         self.right_team = right_team
         self.board = Board(BOARD_WIDTH, BOARD_HEIGHT, PADDING, PADDING, left_team=self.left_team, right_team=self.right_team)

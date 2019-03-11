@@ -15,3 +15,4 @@ DEF_DELTA_LIMIT = int(environ.get('PONGPY_DEF_DELTA_LIMIT', 1))  # DEF の移動
 BAR_WIDTH = int(environ.get('PONGPY_BAR_WIDTH', 2))  # bar の横幅
 SET_POINT = int(environ.get('PONGPY_SET_POINT', 5))  # 1ゲームの勝利点
 MATCH_POINT = int(environ.get('PONGPY_MATCH_POINT', 2))  # 何ゲーム先取で勝利か
+FRAME_RATE = int(environ.get('PONGPY_FRAME_RATE', 100))  # FPS

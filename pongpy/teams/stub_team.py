@@ -4,6 +4,9 @@ from pongpy.models.state import State
 
 
 class StubTeam(Team):
+    """
+    初期位置のまま動かないサンプル。
+    """
     @property
     def name(self) -> str:
         return 'stub team'

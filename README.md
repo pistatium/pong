@@ -33,8 +33,14 @@ ATK と DEF にはそれぞれ以下の特徴があります。
 
 ## インストール
 
+__Requirements__
+* Python3
+* Pycel
+  * https://github.com/kitao/pyxel/blob/master/README.ja.md
+
+__Install__
 ```sh
-$ pip install -U pongpy
+$ pip3 install -U pongpy
 ```
 
 ### 対戦開始

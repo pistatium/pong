@@ -33,8 +33,14 @@ ATK と DEF にはそれぞれ以下の特徴があります。
 
 ## インストール
 
+__Requirements__
+* Python3
+* Pycel
+  * https://github.com/kitao/pyxel/blob/master/README.ja.md
+
+__Install__
 ```sh
-$ pip install -U pongpy
+$ pip3 install -U pongpy
 ```
 
 ### 対戦開始
@@ -80,6 +86,10 @@ $ pongpy myteam:MyTeam
 ```
 
 のようにコマンドを叩くと、今作ったチームとの対戦が始まります。
+
+`ModuleNotFoundError: No module named` というエラーが出てしまう場合は `export PYTHONPATH=$PYTHONPATH:$(pwd)` などで現在のディレクトリをパスとして認識するようにしてみてください。
+
+
 
 第二引数では対戦相手を指定できるため、自分対自分の対戦も可能です。
 

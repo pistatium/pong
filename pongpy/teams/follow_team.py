@@ -13,8 +13,8 @@ class FollowTeam(Team):
 
     def atk_action(self, info: GameInfo, state: State) -> int:
         direction = (state.ball_pos.y - state.mine_team.atk_pos.y) > 0
-        return GameInfo.atk_return_limit if direction else -GameInfo.atk_return_limit
+        return info.atk_return_limit if direction else -info.atk_return_limit
 
     def def_action(self, info: GameInfo, state: State) -> int:
         direction = (state.ball_pos.y - state.mine_team.def_pos.y) > 0
-        return GameInfo.def_return_limit if direction else -GameInfo.def_return_limit
+        return info.def_return_limit if direction else -info.def_return_limit

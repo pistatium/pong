@@ -87,7 +87,8 @@ $ pongpy myteam:MyTeam
 
 のようにコマンドを叩くと、今作ったチームとの対戦が始まります。
 
-`ModuleNotFoundError: No module named` というエラーが出てしまう場合は `export PYTHONPATH=$(pwd)` などで現在のディレクトリをパスとして認識するようにしてみてください。
+`ModuleNotFoundError: No module named` というエラーが出てしまう場合は `export PYTHONPATH=$PYTHONPATH:$(pwd)` などで現在のディレクトリをパスとして認識するようにしてみてください。
+
 
 
 第二引数では対戦相手を指定できるため、自分対自分の対戦も可能です。

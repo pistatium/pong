@@ -8,7 +8,7 @@ from pongpy.models.state import State
 class ManualTeam(Team):
     """
     デバッグ用の手動操作チーム。
-    Pyxel を直接読んでいるのでデバッグ用と以外では利用しない。
+    Pyxel を直接読んでいるのでデバッグ用途以外では利用しないでください。
     """
     @property
     def name(self) -> str:

@@ -35,7 +35,7 @@ ATK と DEF にはそれぞれ以下の特徴があります。
 
 __Requirements__
 * Python3.7+
-* Pycel
+* pyxel
   * https://github.com/kitao/pyxel/blob/master/README.ja.md
 
 __Install__

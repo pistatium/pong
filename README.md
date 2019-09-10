@@ -1,34 +1,42 @@
-# Pong
+# PongPy
 
 ![](https://raw.githubusercontent.com/pistatium/pong/master/resources/demo.gif)
 
 
 Python + [pyxel](https://github.com/kitao/pyxel/blob/master/README.ja.md) で作成した Pong ゲームです。
 
-Team を実装して CPU 同士を戦わせる事ができます
+Team のアルゴリズムを実装することで Team 同士の自動対戦が出来るようになってます。
+
+アルゴリズムの腕試しに挑戦してみてください。
+
 
 
 ### ゲーム概要
 
 ![](https://raw.githubusercontent.com/pistatium/pong/master/resources/about_pong.png)
 
-各チームには アタッカー(ATK) とディフェンダー(DEF) がいて、前衛と後衛をそれぞれ担当します。
+ベースは Pong と呼ばれるゲームを踏襲しています。
+
+お互いにボールを弾きあい、画面端の相手のゴールへ入れると得点になります。
+
+各チームには アタッカー(ATK) とディフェンダー(DEF) が 1つづついて、前衛と後衛をそれぞれ担当します。
 
 ATK と DEF にはそれぞれ以下の特徴があります。
 
 * ATK: 
-   * 縦幅が狭い
-   * 動きが早い
+   * 幅が狭い
+   * 移動速度が早い
    * ボールを跳ね返すとき、斜めに跳ね返しやすい
 * DEF:
-   * 縦幅が広い
-   * 動きが遅い
+   * 幅が広い
+   * 移動速度が遅い
    * ボールを跳ね返すとき、角度がつきにくい
    
  これらの特徴を生かして、いかに相手のゴールへボールを運べるかを競います。
  
-* ゲームは 1セット 5点先取制で、都度左右交換、2セット先取で勝利となります。
-* 一定時間が経つとお互いのATK、DEFが近づいていきます。
+ゲームは 1セット 5点先取制で、都度左右コート交換、2セット先取でチームの勝利となります。
+
+またラリーが続くとゲームが終わらなくなってしまうため、一定時間が経つごとにお互いのATK、DEFが中央へ近づく仕組みがあります。
 
 
 ## インストール
@@ -36,6 +44,8 @@ ATK と DEF にはそれぞれ以下の特徴があります。
 __Requirements__
 * Python3.7+
 * pyxel
+  * インストール方法はリンク先を参照してください
+  * Windows / Mac / Linux 対応です
   * https://github.com/kitao/pyxel/blob/master/README.ja.md
 
 __Install__
@@ -50,6 +60,7 @@ $ pongpy
 ```
 
 デフォルトだとプリインストールされたチーム同士で戦います。
+後述するオプションを指定することで対戦するチームを変更できます。
 
 
 ## Team を実装する
@@ -79,7 +90,7 @@ class MyTeam(Team):
 
 ```
 
-のようなスクリプトを myteam.py という名前で作ります。(好きに変えても大丈夫です)
+のようなスクリプトを作ります。 説明のため myteam.py というファイル名で作ります。(好きに変えても大丈夫です)
 
 ```sh
 $ pongpy myteam:MyTeam
@@ -87,11 +98,10 @@ $ pongpy myteam:MyTeam
 
 のようにコマンドを叩くと、今作ったチームとの対戦が始まります。
 
-`ModuleNotFoundError: No module named` というエラーが出てしまう場合は `export PYTHONPATH=$PYTHONPATH:$(pwd)` などで現在のディレクトリをパスとして認識するようにしてみてください。
+※ `ModuleNotFoundError: No module named` というエラーが出てしまう場合は `export PYTHONPATH=$PYTHONPATH:$(pwd)` などで現在のディレクトリをパスとして認識するようにしてみてください。
 
 
-
-第二引数では対戦相手を指定できるため、自分対自分の対戦も可能です。
+第二引数では対戦相手を指定できるため、同じチーム同士の対戦も可能です。
 
 ```sh
 $ pongpy myteam:MyTeam myteam:MyTeam
@@ -138,15 +148,15 @@ __その他__
     * https://github.com/pistatium/pong/tree/master/pongpy/teams
 
 
-### ふわっとしたレギュレーション
+### 実装する上でのレギュレーション
 * Team の各関数内から例外をスローしてはいけません
 * Team 内で pyxel のインポートや操作をしてはいけません
-* ゲーム進行を阻害しない程度の実行時間で関数は結果を返してください
+* ゲーム進行を阻害しない程度の実行時間で結果を返してください
 * ゲームに関係ない処理を入れないでください
 
 ## FAQ
 
-### 人間 VS CPU で戦いたい
+### 人間 VS CPU で戦ってみたい
 
 `pongpy.teams.manual_team:ManualTeam` を読み込むとキーボードで動くようになります。
 「I」「K」「W」「S」 で操作してください。人間 VS 人間は実装してません。

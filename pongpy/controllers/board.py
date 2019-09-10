@@ -81,16 +81,16 @@ class Board:
         pyxel.rect(
             self.offset_x,
             self.offset_y,
-            self.game_info.width + self.offset_x,
-            self.game_info.height + self.offset_y,
+            self.game_info.width,
+            self.game_info.height,
             Color.GRAY.value)
 
         ball_x, ball_y = self.absolute(self.ball.pos)
         pyxel.rect(
             ball_x - BALL_SIZE // 2,
             ball_y - BALL_SIZE // 2,
-            ball_x + BALL_SIZE // 2,
-            ball_y + BALL_SIZE // 2,
+            BALL_SIZE,
+            BALL_SIZE,
             Color.GREEN.value)
 
         for player in (self.p1, self.p2):
@@ -98,16 +98,16 @@ class Board:
             pyxel.rect(
                 x - BAR_WIDTH // 2,
                 y - ATK_SIZE // 2,
-                x + BAR_WIDTH // 2,
-                y + ATK_SIZE // 2,
+                BAR_WIDTH,
+                ATK_SIZE,
                 Color.BLUE.value)
 
             x, y = self.absolute(player.def_pos)
             pyxel.rect(
                 x - BAR_WIDTH // 2,
                 y - DEF_SIZE // 2,
-                x + BAR_WIDTH // 2,
-                y + DEF_SIZE // 2,
+                BAR_WIDTH,
+                DEF_SIZE,
                 Color.YELLO.value)
         x, y = self.absolute(Pos(0, self.game_info.height))
         scores = f'{self.p1.score_label} {self.p2.score_label}'

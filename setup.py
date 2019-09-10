@@ -4,12 +4,12 @@ setup(
     name="pongpy",
     url='https://github.com/pistatium/pong',
     description='Pong game',
-    version="0.1.4",
+    version="0.1.5",
     license='MIT',
     author='pistatium',
     packages=find_packages(),
     install_requires=[
-        "pyxel",
+        "pyxel==1.2.6",
         "click"
     ],
     entry_points={

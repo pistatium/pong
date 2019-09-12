@@ -6,8 +6,8 @@ from pongpy.models.game_info import GameInfo
 from pongpy.models.pos import Pos
 from pongpy.models.state import State, TeamState
 
-DMZ_SIZE = 10
-SADDEN_DEATH_DURATION = 1000
+DMZ_SIZE = 8
+SADDEN_DEATH_DURATION = 400
 MAX_NAME_LENGTH = 16
 NAME_PATTERN = re.compile(r'^[\w ]+$', re.A)
 
@@ -33,7 +33,7 @@ class TeamManager:
     def update(self, state: State):
         # ゲームが長引いたらだんだん近づける
         direction = -1 if state.is_right_side else 1
-        time_pos = direction if state.time % SADDEN_DEATH_DURATION == 1 else 0
+        time_pos = direction * 0.1 if state.time % SADDEN_DEATH_DURATION == 1 else 0
         # これ以上は近づけない
         if self.game_info.width // 2 - DMZ_SIZE < self.atk_pos.x < self.game_info.width // 2 + DMZ_SIZE:
             time_pos = 0

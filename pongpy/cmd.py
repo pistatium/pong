@@ -2,7 +2,7 @@ import importlib
 
 import click
 
-from pongpy.pong import PongMatch
+from pongpy.pong import Game
 
 
 @click.command()
@@ -11,7 +11,7 @@ from pongpy.pong import PongMatch
 def main(team1, team2):
     t1 = dynamic_import(team1)
     t2 = dynamic_import(team2)
-    PongMatch(t1(), t2()).start()
+    Game(t1(), t2()).start()
 
 
 def dynamic_import(name):

@@ -13,6 +13,5 @@ MAX_VY = int(environ.get('MAX_VY', 8))  # ボールの縦方向の最大速度
 ATK_DELTA_LIMIT = int(environ.get('PONGPY_ATK_DELTA_LIMIT', 2))  # ATK の移動制限
 DEF_DELTA_LIMIT = int(environ.get('PONGPY_DEF_DELTA_LIMIT', 1))  # DEF の移動制限
 BAR_WIDTH = int(environ.get('PONGPY_BAR_WIDTH', 2))  # bar の横幅
-SET_POINT = int(environ.get('PONGPY_SET_POINT', 5))  # 1ゲームの勝利点
-MATCH_POINT = int(environ.get('PONGPY_MATCH_POINT', 2))  # 何ゲーム先取で勝利か
+SET_POINT = int(environ.get('PONGPY_SET_POINT', 11))  # 1ゲームの勝利点
 FRAME_RATE = int(environ.get('PONGPY_FRAME_RATE', 100))  # FPS

@@ -51,6 +51,5 @@ class Pong:
 
     def draw(self):
         pyxel.cls(Color.BLACK.value)
-        pyxel.load('../assets/resource.pyxres')
         self.board.draw()
         pyxel.text(PADDING * 2, HEIGHT - PADDING * 2, ''.join('o' if x else 'x' for x in self.games), Color.GRAY.value)

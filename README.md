@@ -37,7 +37,7 @@ ATK と DEF にはそれぞれ以下の特徴があります。
 ゲームは 11 点先取したほうが勝利となります。
 但しデュースがあるため、2 点以上点差がない場合は差がつくまで続行となります。
 
-また、ラリーが終わらなくなってしまうため、一定時間が経つごとにお互いのATK、DEFが中央へ近づいて難易度があがる仕組みがあります。
+また、ラリーが終わらなくなってしまうため、一定時間が経つごとにお互いのATK、DEFが中央側へ近づいていく仕組みがあります。
 
 
 ## インストール
@@ -81,17 +81,19 @@ from pongpy.models.state import State
 class MyTeam(Team):
     @property
     def name(self) -> str:
-        return 'myteam'
+        return 'myteam'  # チーム名(ascii only)
 
     def atk_action(self, info: GameInfo, state: State) -> int:
-        return 1
+        # 毎フレーム、下方向に 2 動く
+        return 2
 
     def def_action(self, info: GameInfo, state: State) -> int:
-        return 1
+        # 毎フレーム、上方向に 1 動く
+        return -1
 
 ```
 
-のようなスクリプトを作ります。 説明のため myteam.py というファイル名で作ります。(好きに変えても大丈夫です)
+のようなスクリプトを作ります。 説明のため myteam.py というファイル名でカレントディレクトリに作ります。(好きに変えても大丈夫です)
 
 ```sh
 $ pongpy myteam:MyTeam
@@ -103,19 +105,21 @@ $ pongpy myteam:MyTeam
 
 
 第二引数では対戦相手を指定できるため、同じチーム同士の対戦も可能です。
+第一引数で渡したチームが左側、第二引数で渡したチームが右側で戦います。
 
 ```sh
 $ pongpy myteam:MyTeam myteam:MyTeam
 ```
 
 ### チームの実装方法
-先程の例のように Team インターフェースを実装する形でチームの動きを制御します。
+先程の例のように Team インターフェースを実装することでチームの動きを制御できます。
+必要なプロパティ・メソッドは以下の3つです。
 
 __name__
 
 チーム名を返すプロパティです。長すぎない ASCII文字列 を返してください。
 
-__atk_action__
+__def atk_action(self, info: GameInfo, state: State) -> int__
 
 ATK がどう動くかを決めるための関数です。毎フレームごとに呼び出されます。
 ゲーム自体の情報やボール、味方、相手の位置などの情報は引数に入っています。
@@ -132,7 +136,7 @@ ATK がどう動くかを決めるための関数です。毎フレームごと�
 | state: State | 現在のゲーム状況が格納されてます https://github.com/pistatium/pong/blob/master/pongpy/models/state.py |
 
 
-__def_action__
+__def def_action(self, info: GameInfo, state: State) -> int__
 
 同様に DEF がどう動くかを決めるための関数がこちらです。
 範囲は `-DEF_DELTA_LIMIT<= y <= DEF_DELTA_LIMIT` になります。
@@ -140,14 +144,15 @@ __def_action__
 
 __その他__
 
-* コンストラクタは引数なしで呼ばれます。
-* Team 内に自由にインスタンス変数して構いません。
+* チームのコンストラクタは引数なしで呼ばれます。
+    * 1度だけ実行したい処理があればコンストラクタで実施してください。
+* Team インスタンス内に自由に変数等をもたせて構いません。
 * Pos の座標は左上隅が (0, 0), 左下が (0, height), 右上が(width, 0) になります。 
 * 右側のチームの場合ゴールの向きに注意してください。
     * 自動的な座標変換は行われません。
     * メソッドに渡される情報を見て判断してください。
 
-* 参考実装はこちらで見れます。
+* チームの参考実装はこちらで見れます。
     * https://github.com/pistatium/pong/tree/master/pongpy/teams
 
 
@@ -161,12 +166,18 @@ __その他__
 
 ### 人間 VS CPU で戦ってみたい
 
-`pongpy.teams.manual_team:ManualTeam` を読み込むとキーボードで動くようになります。
+`pongpy.teams.manual_team:ManualTeam` をチームとして読み込むとキーボードで動かせます。
 「I」「K」「W」「S」 で操作してください。人間 VS 人間は実装してません。
 
 ### 設定を変更したい
 
 definitions にある値は環境変数を指定することで変更できます。
+
+### 強いチームを作りたい
+前回関数が呼ばれたときのボールの位置をインスタンス変数に保存しておいて、ボールがどう動くかを予測してみましょう。  
+到達予定地にATKやDEFが先回りできればかなり強くなります！  
+
+DQNなどの機械学習的なアプローチも挑戦してみてください。
 
 ### 物理法則がおかしい
 

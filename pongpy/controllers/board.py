@@ -11,6 +11,7 @@ from pongpy.models.game_info import GameInfo
 from pongpy.models.pos import Pos
 from pongpy.models.state import State
 from pongpy.definitions import BALL_SIZE, BAR_WIDTH, ATK_SIZE, DEF_SIZE, PADDING, MAX_VY
+from pongpy.sounds import Sound, play_se
 
 
 class Board:
@@ -28,6 +29,7 @@ class Board:
         self.offset_x = offset_x
         self.offset_y = offset_y
         self.ball = Ball(BALL_SIZE, Pos(width // 2, height // 2), 1, random.random() * 5)
+
 
     def absolute(self, pos) -> Tuple[int, int]:
         return pos.x + self.offset_x, pos.y + self.offset_y
@@ -49,12 +51,14 @@ class Board:
             self.ball.vy *= -1
         if ball_pos.x < 0:
             # p2 ゴール
+            play_se(Sound.RIGHT_POINT)
             self.p2.add_score()
             self.ball.pos = Pos(self.game_info.width // 2, self.game_info.height // 2)
             self.ball.vx = 1
             self.ball.vy = random.random() * 2
         if ball_pos.x > self.game_info.width:
             # p1 ゴール
+            play_se(Sound.LEFT_POINT)
             self.p1.add_score()
             self.ball.pos = Pos(self.game_info.width // 2, self.game_info.height // 2)
             self.ball.vx = -1

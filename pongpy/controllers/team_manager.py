@@ -32,6 +32,7 @@ class TeamManager:
 
     def update(self, state: State):
         # ゲームが長引いたらだんだん近づける
+        # (TeamManager がこれを持ってしまってるのあまりよくない)
         direction = -1 if state.is_right_side else 1
         time_pos = direction * 0.1 if state.time % SADDEN_DEATH_DURATION == 1 else 0
         # これ以上は近づけない

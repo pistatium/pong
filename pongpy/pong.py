@@ -6,6 +6,7 @@ from pongpy.controllers.board import Board
 from pongpy.definitions import PADDING, HEIGHT, WIDTH, BOARD_WIDTH, BOARD_HEIGHT, SET_POINT, FRAME_RATE
 from pongpy.interfaces.team import Team
 from pongpy.models.color import Color
+from pongpy.sounds import play_bgm, init_sounds
 
 logger = getLogger(__name__)
 
@@ -32,9 +33,12 @@ class Pong:
 
     def __init__(self, left_team: Team, right_team: Team):
         pyxel.init(WIDTH, HEIGHT, fps=FRAME_RATE)
+        init_sounds()
         self.left_team = left_team
         self.right_team = right_team
         self.board = Board(BOARD_WIDTH, BOARD_HEIGHT, PADDING, PADDING, left_team=self.left_team, right_team=self.right_team)
+
+        play_bgm()
         pyxel.run(self.update, self.draw)
 
     def update(self):

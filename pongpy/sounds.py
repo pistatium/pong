@@ -43,7 +43,6 @@ def init_sounds():
     )
 
     # BGM
-    # とりあえずサンプルを拝借
     katyusha_melody1 = (
         'd3d3d3d3 d3d3e3e3 f3f3f3f3 f3f3d3d3'
         + 'f3f3f3f3 e3e3d3d3 e3e3e3e3 a2a2a2a2'
@@ -58,14 +57,22 @@ def init_sounds():
         + 'g3g3g3g3 f3f3e3e3 d3d3d3d3 d3d3d3r'
     )
 
-    katsusha_base = (
+    katsusha_base_1 = (
         'd2d2a2a2 d2d2a2a2 d2d2a2a2 d2d2a2a2'
         + 'd2d2a2a2 d2d2a2a2 a1a1c#2c#2 a1a1e2e2'
         + 'a1a1c#2c#2 a1a1e2e2 a1a1c#2c#2 a1a1e2e2'
         + 'a1a1e2e2 a1a1e2e2 d2d2a2a2 d2d2a2a2'
     )
 
-    katsusha = katyusha_melody1
+    katsusha_base_2 = (
+        'b-1b-1f2f2 b-1b-1f2f2 a1a1c#2c#2 a1a1e2e2'
+        + 'g1g1d2d2 g1g1b-1b-1 d2d2a2a2 d2d2a2a2'
+        + 'g1g1d2d2 g1g1b-1b-1 d2d2a2a2 d2d2a2a2'
+        + 'a1a1e2e2 a1a1e2e2 d2d2a2a2 d2d2a2a2'
+    )
+
+    katsusha = katyusha_melody1 + katyusha_melody2 * 2
+    katsusha_base = katsusha_base_1 + katsusha_base_2 * 2
 
     pyxel.sound(Sound.BGM_1.value).set(
         note=katsusha,
@@ -77,7 +84,7 @@ def init_sounds():
 
     pyxel.sound(Sound.BGM_2.value).set(
         note=katsusha_base,
-        tone="s",
+        tone="t",
         volume=("2"),
         effect=("n"),
         speed=20,

@@ -90,18 +90,6 @@ def init_sounds():
         speed=20,
     )
 
-    # pyxel.sound(Sound.BGM_2.value).set(
-    #     note=harmony1 * 2 + harmony2 * 2, tone="t", volume="5", effect="f", speed=20
-    # )
-    #
-    # pyxel.sound(Sound.BGM_3.value).set(
-    #     note=("f0 r a4 r  f0 f0 a4 r" "f0 r a4 r   f0 f0 a4 f0"),
-    #     tone="n",
-    #     volume="6622 6622 6622 6426",
-    #     effect="f",
-    #     speed=20,
-    # )
-
     ch0 = []
     ch1 = [Sound.BGM_1.value, ]
     ch2 = [Sound.BGM_2.value, ]

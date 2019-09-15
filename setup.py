@@ -4,7 +4,7 @@ setup(
     name="pongpy",
     url='https://github.com/pistatium/pong',
     description='Pong game',
-    version="0.2.1",
+    version="0.2.2",
     license='MIT',
     author='pistatium',
     packages=find_packages(),

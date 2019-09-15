@@ -168,7 +168,7 @@ __その他__
 
 `export PONGPY_SOUND=1` でゲームの音楽が有効になります。
 
-BGM: Powered by @TatchNicolas
+BGM: Powered by [@TatchNicolas](https://github.com/TatchNicolas)
 
 ### 人間 VS CPU で戦ってみたい
 

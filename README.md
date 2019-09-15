@@ -164,6 +164,12 @@ __その他__
 
 ## FAQ
 
+### BGM、SEを有効にしたい
+
+`export PONGPY_SOUND=1` でゲームの音楽が有効になります。
+
+BGM: Powered by @TatchNicolas
+
 ### 人間 VS CPU で戦ってみたい
 
 `pongpy.teams.manual_team:ManualTeam` をチームとして読み込むとキーボードで動かせます。

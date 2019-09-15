@@ -1,6 +1,8 @@
 from enum import Enum
 import pyxel
 
+from pongpy.definitions import ENABLE_SOUND
+
 
 class SoundChannel(Enum):
     SE = 0
@@ -79,7 +81,7 @@ def init_sounds():
         tone="s",
         volume=("3"),
         effect=("n"),
-        speed=20,
+        speed=12,
     )
 
     pyxel.sound(Sound.BGM_2.value).set(
@@ -87,7 +89,7 @@ def init_sounds():
         tone="t",
         volume=("2"),
         effect=("n"),
-        speed=20,
+        speed=12,
     )
 
     ch0 = []
@@ -99,8 +101,10 @@ def init_sounds():
 
 
 def play_se(se: Sound):
-    pyxel.play(SoundChannel.SE.value, se.value)
+    if ENABLE_SOUND:
+        pyxel.play(SoundChannel.SE.value, se.value)
 
 
 def play_bgm():
-    pyxel.playm(Music.MAIN_BGM.value, loop=True)
+    if ENABLE_SOUND:
+        pyxel.playm(Music.MAIN_BGM.value, loop=True)

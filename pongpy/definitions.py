@@ -1,4 +1,5 @@
 from os import environ
+ENABLE_SOUND = environ.get('PONGPY_SOUND') in ('1', 'true', 'True')
 BOARD_WIDTH = int(environ.get('PONGPY_BOARD_WIDTH', 192))  # PONGの横幅
 BOARD_HEIGHT = int(environ.get('PONGPY_BOARD_HEIGHT', 128))  # PONGの縦幅
 PADDING = int(environ.get('PONGPY_PADDING', 3))  # 余白サイズ
